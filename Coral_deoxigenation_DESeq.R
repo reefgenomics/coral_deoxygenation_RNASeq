@@ -13,7 +13,10 @@ map3<-subset(map.a, map.a$Time == "T2")
 map5<-subset(map.a, map.a$Time == "T3") 
 
 cnt_S<-read.table("./Input_files/Finaltable_species", header=TRUE, row.names = 1, sep="\t") 
-cnts<-round(cnt_S, 0)
+#remove genes uniquely mapped to reference by one species
+rm= read.table("./Input_files/DiffMapGenes_1433_toRemove.txt", header=TRUE, row.names = 1, sep= "\t")
+cnt_2=subset(cnt_S, !(row.names(cnt_S) %in% row.names(rm)))
+cnts=round(cnt_2, 0)
 cnts.sub<-subset(cnts, rowSums(cnts) > 50) # 10 excludes 200k, 20 excludes almost 500k
 cnts.sor<-cnts.sub[ , order(names(cnts.sub))]
 colnames(cnts.sor)=gsub("\\.", "-", colnames(cnts.sor))
