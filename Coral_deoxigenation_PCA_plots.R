@@ -7,7 +7,10 @@ library(ellipse)
 map.pre<-read.delim("./Input_files/Metadata.txt", row.names = 1, header = TRUE)
 map<-map.pre[order(rownames(map.pre)), ]
 cnt<-read.table("./Input_files/Finaltable_species", header=TRUE, row.names = 1, sep= "\t")
-cnts<-round(cnt, 0)
+#remove genes uniquely mapped to reference by one species
+rm= read.table("./Input_files/DiffMapGenes_1433_toRemove.txt", header=TRUE, row.names = 1, sep= "\t")
+cnt_2=subset(cnt, !(row.names(cnt) %in% row.names(rm)))
+cnts=round(cnt_2, 0)
 cnts.sub<-subset(cnts, rowSums(cnts) > 50) 
 cnts.sor<-cnts.sub[ , order(names(cnts.sub))]
 colnames(cnts.sor)=gsub("\\.", "-", colnames(cnts.sor))
